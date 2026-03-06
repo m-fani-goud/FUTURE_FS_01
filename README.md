@@ -1,6 +1,6 @@
 # CRM Lead Manager
 
-A simple CRM system to manage client leads generated from website contact forms.
+A simple CRM application to manage client leads generated from website contact forms.
 
 ## Tech Stack
 Frontend: React + Tailwind CSS  
@@ -16,6 +16,11 @@ Database: MongoDB Atlas
 - Status Filters
 - Dashboard Analytics
 - Lead Analytics Chart
+
+## Admin Login Credentials
+
+Email: admin@crm.com  
+Password: admin123
 
 ## Installation
 
