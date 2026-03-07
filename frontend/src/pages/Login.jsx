@@ -11,7 +11,7 @@ const login = async (e) => {
 e.preventDefault();
 
 const res = await axios.post(
-"http://localhost:5000/api/auth/login",
+"https://future-fs-01-tg5r.onrender.com",
 { email,password }
 );
 
