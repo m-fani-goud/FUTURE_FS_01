@@ -1,30 +1,29 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "./api"; // Import the instance we created above
 
 function Login({ setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); // Track login errors
-  const [loading, setLoading] = useState(false); // UI feedback
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const login = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      // Note: Ensure the /login path matches your actual backend route
-      const res = await axios.post(
-        "https://future-fs-01-tg5r.onrender.com/login", 
-        { email, password }
-      );
+      // If your backend route is just /login, this becomes:
+      // https://future-fs-01-tg5r.onrender.com/api/login
+      const res = await API.post("/login", { email, password });
 
       const token = res.data.token;
-      
       localStorage.setItem("token", token);
       setToken(token);
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Please check your credentials.");
+      // Provides feedback if the 404 persists or credentials fail
+      const message = err.response?.data?.message || "Connection Error. Check API URL.";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -36,12 +35,12 @@ function Login({ setToken }) {
         <h2 className="text-2xl font-bold text-center mb-6">CRM Admin Login</h2>
 
         {error && (
-          <div className="bg-red-100 text-red-600 p-2 mb-4 text-sm rounded text-center">
+          <div className="bg-red-100 text-red-600 p-2 mb-4 text-sm rounded text-center border border-red-200">
             {error}
           </div>
         )}
 
-        <form onSubmit={login}>
+        <form onSubmit={handleLogin}>
           <input
             type="email"
             required
@@ -60,15 +59,13 @@ function Login({ setToken }) {
 
           <button
             disabled={loading}
-            className={`text-white p-3 w-full rounded transition ${
-              loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+            className={`text-white p-3 w-full rounded font-semibold transition ${
+              loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 shadow-md"
             }`}
           >
-            {loading ? "Authenticating..." : "Login"}
+            {loading ? "Verifying..." : "Login to Dashboard"}
           </button>
         </form>
-
-        <p className="text-center text-sm text-gray-500 mt-4">Admin Access Only</p>
       </div>
     </div>
   );

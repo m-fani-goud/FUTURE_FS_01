@@ -1,16 +1,17 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://future-fs-01-tg5r.onrender.com",
+  // Added /api as a likely prefix to fix your 404
+  baseURL: "https://future-fs-01-tg5r.onrender.com/api", 
 });
 
-// Automatically add the token to every request
-API.interceptors.request.use((req) => {
+// Interceptor to attach token to headers automatically
+API.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
-    req.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = `Bearer ${token}`;
   }
-  return req;
+  return config;
 });
 
 export default API;
