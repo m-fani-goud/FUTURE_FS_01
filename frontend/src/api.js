@@ -1,14 +1,14 @@
 import axios from "axios";
 
+console.log("API URL:", import.meta.env.VITE_API_URL);
+
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     "Content-Type": "application/json",
   },
 });
-
-/* Attach token automatically */
 
 API.interceptors.request.use(
   (config) => {
@@ -22,8 +22,6 @@ API.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
-
-/* Handle response errors globally */
 
 API.interceptors.response.use(
   (response) => response,

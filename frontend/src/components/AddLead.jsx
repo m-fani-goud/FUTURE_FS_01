@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../api";
 
 function AddLead({ refresh }) {
 
@@ -19,23 +19,30 @@ function AddLead({ refresh }) {
   };
 
   const submitLead = async (e) => {
+
     e.preventDefault();
 
-    await axios.post(
-      "http://localhost:5000/api/leads",
-      lead
-    );
+    try {
 
-    // Reset form
-    setLead({
-      name: "",
-      email: "",
-      source: "",
-      notes: "",
-      followUpDate: ""
-    });
+      await API.post("/leads", lead);
 
-    refresh();
+      // Reset form
+      setLead({
+        name: "",
+        email: "",
+        source: "",
+        notes: "",
+        followUpDate: ""
+      });
+
+      refresh();
+
+    } catch (error) {
+
+      console.error("Failed to add lead:", error);
+
+    }
+
   };
 
   return (
@@ -51,7 +58,6 @@ function AddLead({ refresh }) {
         className="grid grid-cols-2 gap-4"
       >
 
-        {/* Name */}
         <input
           name="name"
           placeholder="Name"
@@ -60,7 +66,6 @@ function AddLead({ refresh }) {
           className="border p-2 w-full rounded"
         />
 
-        {/* Email */}
         <input
           name="email"
           placeholder="Email"
@@ -69,7 +74,6 @@ function AddLead({ refresh }) {
           className="border p-2 w-full rounded"
         />
 
-        {/* Source */}
         <select
           name="source"
           value={lead.source}
@@ -84,7 +88,6 @@ function AddLead({ refresh }) {
           <option value="Other">Other</option>
         </select>
 
-        {/* Follow-up Date */}
         <input
           type="date"
           name="followUpDate"
@@ -93,16 +96,14 @@ function AddLead({ refresh }) {
           className="border p-2 w-full rounded"
         />
 
-        {/* Notes */}
         <textarea
           name="notes"
           placeholder="Notes about the lead..."
           value={lead.notes}
           onChange={handleChange}
           className="border p-2 col-span-2 w-full rounded"
-        ></textarea>
+        />
 
-        {/* Submit Button */}
         <button
           className="col-span-2 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded"
         >
@@ -114,6 +115,7 @@ function AddLead({ refresh }) {
     </div>
 
   );
+
 }
 
 export default AddLead;

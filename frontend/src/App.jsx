@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "./api";
 
 import {
   FiSearch,
@@ -17,6 +17,8 @@ import Dashboard from "./components/Dashboard";
 import LeadChart from "./components/LeadChart";
 import Login from "./pages/Login";
 
+import "./index.css";
+
 function App() {
 
   const [token, setToken] = useState(
@@ -27,19 +29,34 @@ function App() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
 
+  // Fetch Leads
   const fetchLeads = async () => {
-    const res = await axios.get(
-      "http://localhost:5000/api/leads"
-    );
-    setLeads(res.data);
+
+    try {
+
+      const res = await API.get("/leads");
+
+      setLeads(res.data);
+
+    } catch (error) {
+
+      console.error("Failed to fetch leads:", error);
+
+    }
+
   };
 
   useEffect(() => {
+
     if (token) {
+
       fetchLeads();
+
     }
+
   }, [token]);
 
+  // Search + Filter
   const filteredLeads = leads.filter((lead) => {
 
     const matchesSearch =
@@ -55,20 +72,27 @@ function App() {
 
   });
 
+  // Logout
   const logout = () => {
+
     localStorage.removeItem("token");
+
     setToken(null);
+
   };
 
+  // Login page
   if (!token) {
+
     return <Login setToken={setToken} />;
+
   }
 
   return (
 
     <div className="min-h-screen bg-gray-100">
 
-      {/* Admin Header */}
+      {/* Header */}
 
       <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 shadow">
 
@@ -106,7 +130,7 @@ function App() {
 
         </div>
 
-        {/* Search Bar */}
+        {/* Search */}
 
         <div className="relative mb-4">
 
@@ -123,17 +147,19 @@ function App() {
           />
 
           {search && (
+
             <button
               onClick={() => setSearch("")}
               className="absolute right-3 top-2 text-gray-500"
             >
               <FiX />
             </button>
+
           )}
 
         </div>
 
-        {/* Status Filters */}
+        {/* Filters */}
 
         <div className="flex flex-wrap gap-3 mb-4">
 
